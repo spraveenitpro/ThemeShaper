@@ -1,0 +1,32 @@
+<?php
+
+/**
+ * The Template for displaying all single posts.
+ *
+ * @package Shape
+ * @since Shape 1.0
+ */
+
+ get_header();  ?>
+
+ 	<div class="content-area" id="primary">
+ 		<div id="content" class="site-content" role="main">
+ 			
+ 			<?php while( have_posts()) : the_post(); ?>
+
+ 				<?php shape_content_nav('nav-above'); ?>
+ 				<?php get_template_part('content', 'single' ); ?>
+ 				<?php shape_content_nav('nav-below'); ?>
+
+ 				<?php
+ 				 // If comments are open or we have at least one comment, load up the comment template
+ 				if ( comments_open() || '0' != get_comments_number() )
+ 					comments_template('',true );
+ 				?>
+			<?php endwhile; //End of the Loop ?>
+
+ 		</div><!--Content .site-content -->
+ 	</div> <!-- Primary Content Area -->
+
+ <?php get_sidebar(); ?>
+ <?php get_footer(); ?>
