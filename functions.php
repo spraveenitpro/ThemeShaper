@@ -69,6 +69,32 @@ if (! function_exists('shape_setup') ):
 
 	add_action('after_setup_theme','shape_setup');
 
+    /**
+         * Register widgetized area and update sidebar with default widgets
+         *
+         * @since Shape 1.0
+         */
+        function shape_widgets_init() {
+            register_sidebar( array(
+                'name' => __( 'Primary Widget Area', 'shape' ),
+                'id' => 'sidebar-1',
+                'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+                'after_widget' => '</aside>',
+                'before_title' => '<h1 class="widget-title">',
+                'after_title' => '</h1>',
+            ) );
+         
+            register_sidebar( array(
+                'name' => __( 'Secondary Widget Area', 'shape' ),
+                'id' => 'sidebar-2',
+                'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+                'after_widget' => '</aside>',
+                'before_title' => '<h1 class="widget-title">',
+                'after_title' => '</h1>',
+            ) );
+        }
+add_action( 'widgets_init', 'shape_widgets_init' );
+
 
 
     /**
@@ -88,5 +114,38 @@ function shape_scripts() {
     }
 }
 add_action( 'wp_enqueue_scripts', 'shape_scripts' );
+
+/**
+ * Setup the WordPress core custom background feature.
+ *
+ * Use add_theme_support to register support for WordPress 3.4+
+ * as well as provide backward compatibility for previous versions.
+ * Use feature detection of wp_get_theme() which was introduced
+ * in WordPress 3.4.
+ *
+ * Hooks into the after_setup_theme action.
+ *
+ */
+function shape_register_custom_background() {
+    $args = array(
+        'default-color' => 'e9e0d1',
+    );
+ 
+    $args = apply_filters( 'shape_custom_background_args', $args );
+ 
+    if ( function_exists( 'wp_get_theme' ) ) {
+        add_theme_support( 'custom-background', $args );
+    } else {
+        define( 'BACKGROUND_COLOR', $args['default-color'] );
+        define( 'BACKGROUND_IMAGE', $args['default-image'] );
+        add_custom_background();
+    }
+}
+add_action( 'after_setup_theme', 'shape_register_custom_background' );
+ 
+/**
+ * Implement the Custom Header feature
+ */
+require( get_template_directory() . '/inc/custom-header.php' );
 
 
